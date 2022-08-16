@@ -41,17 +41,18 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Back-end test
+          name: Run Frontend test
           command: |
             cd frontend
             npm install
             npm run test    
+
   test-backend:
     docker: circleci/node:13.8.0
     steps:
       - checkout
       - run:
-          name: Back-end test
+          name: Run backend test
           command: |
             cd backend
             npm install
