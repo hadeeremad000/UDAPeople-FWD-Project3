@@ -146,7 +146,7 @@ jobs:
          name: check ip attached
          command: | 
            cat ~/project/.circleci/ansible/inventory.txt     
-      - destroy_environment  
+      - destroy-environment  
 
 
 workflows:
