@@ -152,6 +152,7 @@ jobs:
 workflows:
   default:
     jobs:
+      - deploy-infrastructure  
       #- build-frontend
       #- build-backend
       #- test-frontend:
@@ -164,5 +165,5 @@ workflows:
          #   - Circleci-FWD
       #- scan-frontend:
        #   requires: [build-frontend]  
-      - deploy-infrastructure    
+
 
