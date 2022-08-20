@@ -184,19 +184,22 @@ jobs:
 workflows:
   default:
     jobs:
-      - configure-infrastructure
-      #- deploy-infrastructure  
-      #- build-frontend
-      #- build-backend
-      #- test-frontend:
-       #    requires: [build-frontend]
-      #- test-backend:
-      #     requires: [build-backend]
-      #- scan-backend:
-       #   requires: [build-backend]
-        #  context: 
-         #   - Circleci-FWD
-      #- scan-frontend:
-       #   requires: [build-frontend]  
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
 
 
