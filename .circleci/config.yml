@@ -152,11 +152,11 @@ jobs:
     docker:
       - image: python:3.7-alpine3.11
     steps:
-      -checkout
-        - add_ssh_keys:
-             fingerprints: ["17:eb:2e:ca:cf:fe:6b:de:08:b8:9f:40:6a:97:10:e6"]
-        - attach_workspace:
-            at: ~/
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["17:eb:2e:ca:cf:fe:6b:de:08:b8:9f:40:6a:97:10:e6"]
+      - attach_workspace:
+          at: ~/
       - run:
           name: Install dependencies
           command: |
