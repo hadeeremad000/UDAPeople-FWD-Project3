@@ -165,7 +165,7 @@ jobs:
       - run:
           name: install awscli
           command: |
-             RUN apk add --no-cache \
+             apk add --no-cache \
              python3 \
              py3-pip \
              && pip3 install --upgrade pip \
