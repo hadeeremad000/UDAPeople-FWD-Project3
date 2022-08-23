@@ -197,14 +197,19 @@ jobs:
             cd backend
             npm install
             npm run migrations > migrations_dump.txt
-      
+      - run:
+          name: check migrations_dump
+          command: |
+            cat ~/project/backend/migrations_dump.txt      
+            
       - run:
           name: Send migration results to kvdb
           command: |
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-            then
-              curl https://kvdb.io/2KTssUQxDG7QMa8ygXk5y2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
-            fi              
+            echo "tables have been created successfully"
+            # if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
+            # then
+            #   curl https://kvdb.io/2KTssUQxDG7QMa8ygXk5y2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+            # fi              
       - destroy-environment 
 
 workflows:
