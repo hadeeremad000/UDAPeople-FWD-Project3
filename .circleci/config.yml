@@ -243,21 +243,13 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-      # - run:
-      #     name: Install dependencies-ansible
-      #     command: |
-      #       yum install -y ansible
-      - run:
-          name: Install node
-          command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            . ~/.nvm/nvm.sh
-            nvm install --lts   
-            node -e "console.log('Running Node.js ' + process.version)"  
-      - run:
-          name: Install npm
-          command: |
-            nvm install-latest-npm     
+            sudo yum  -y update
+            sudo yum -y install python3
+            sudo yum -y install epel-release
+            sudo yum -y install ansible
+            curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
+            yum install -y nodejs
+            pip3 install ansible         
       - attach_workspace:
           at: ~/                   
       - run:
