@@ -150,7 +150,7 @@ jobs:
               --filters "Name=tag:Name,Values=backend-prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
               --output text)
-            echo "http://$BACKEND_AWS_PUBLIC_IP:3030" >> .circleci/outputs/backend_url.txt
+            echo "http://$BACKEND_AWS_PUBLIC_IP:3030" >> ~/project/.circleci/outputs/backend_url.txt
             echo "$BACKEND_AWS_PUBLIC_IP" >> .circleci/ansible/inventory.txt
             cat .circleci/outputs/backend_url.txt
       - persist_to_workspace:
@@ -269,8 +269,8 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive 
-      #- destroy-environment
-      #- revert_migrations             
+      - destroy-environment
+      - revert_migrations             
 
 workflows:
   default:
