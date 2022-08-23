@@ -243,10 +243,10 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-      - run:
-          name: Install dependencies-ansible
-          command: |
-            yum install -y ansible
+      # - run:
+      #     name: Install dependencies-ansible
+      #     command: |
+      #       yum install -y ansible
       - run:
           name: Install node
           command: |
