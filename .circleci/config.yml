@@ -1,5 +1,4 @@
 version: 2.1
-
 commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -11,7 +10,19 @@ commands:
           when: on_fail
           command: |
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
-        
+
+    revert_migrations:
+     description: Revert the last migration if successfully run in the current workflow.
+     steps:
+      - run:
+          name: Revert migrations
+          when: on_fail
+          command: |
+            cd ~/project/backend
+            if [[ -f "~/project/.circleci/outputs/db_migration_success" ]]; then
+              npm i
+              npm run migration:revert
+            fi        
 
 orbs: 
   slack: circleci/slack@4.10.1
@@ -135,17 +146,23 @@ jobs:
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            aws ec2 describe-instances \
+            BACKEND_AWS_PUBLIC_IP=$(aws ec2 describe-instances \
+              --filters "Name=tag:Name,Values=backend-prod-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
-              --output text >> ~/project/.circleci/ansible/inventory.txt
+              --output text)
+            echo "http://$BACKEND_AWS_PUBLIC_IP:3030" >> .circleci/outputs/backend_url.txt
+            echo "$BACKEND_AWS_PUBLIC_IP" >> .circleci/ansible/inventory.txt
+            cat .circleci/outputs/backend_url.txt
       - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
+            - project/.circleci/outputs/backend_url.txt            
       - run:
          name: check ip attached
          command: | 
-           cat ~/project/.circleci/ansible/inventory.txt     
+           cat ~/project/.circleci/ansible/inventory.txt
+           cat ~/project/.circleci/outputs/backend_url.txt
       - destroy-environment  
 
   configure-infrastructure:
@@ -210,7 +227,48 @@ jobs:
             # then
             #   curl https://kvdb.io/2KTssUQxDG7QMa8ygXk5y2/migration_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             # fi              
-      - destroy-environment 
+      - destroy-environment
+      - revert_migrations
+  deploy-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y tar gzip
+      - run:
+          name: Install dependencies-ansible
+          command: |
+            yum install -y ansible
+      - run:
+          name: Install node
+          command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+            . ~/.nvm/nvm.sh
+            nvm install --lts   
+            node -e "console.log('Running Node.js ' + process.version)"  
+      - run:
+          name: Install npm
+          command: |
+            nvm install-latest-npm     
+      - attach_workspace:
+          at: ~/                   
+      - run:
+          name: Get backend url
+          command: |
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm install
+            npm run build
+            tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive 
+      - revert_migrations              
 
 workflows:
   default:
@@ -233,7 +291,9 @@ workflows:
        - configure-infrastructure:
           requires: [deploy-infrastructure]
        - run-migrations:
-          requires: [configure-infrastructure]          
+          requires: [configure-infrastructure] 
+       - deploy-frontend:
+          requires: [run-migrations]                   
 
 
 
