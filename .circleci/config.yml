@@ -123,6 +123,11 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: 
+          name: create directory for backend URL
+          command: |
+            mkdir ~/project/.circleci/outputs
+            touch ~/project/.circleci/outputs/backend_url.txt
       - run:
           name: Install tar utility
           command: |
