@@ -243,10 +243,10 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-            sudo yum  -y update
-            sudo yum -y install python3
-            sudo yum -y install epel-release
-            sudo yum -y install ansible
+            yum  -y update
+            yum -y install python3
+            yum -y install epel-release
+            yum -y install ansible
             curl -sL https://rpm.nodesource.com/setup_10.x |  bash -
             yum install -y nodejs
             pip3 install ansible         
@@ -271,21 +271,21 @@ jobs:
 workflows:
   default:
     jobs:
-       - build-frontend
-       - build-backend
-       - test-frontend:
-          requires: [build-frontend]
-       - test-backend:
-          requires: [build-backend]
-       - scan-backend:
-          requires: [build-backend]
-       - scan-frontend:
-          requires: [build-frontend]
+       #- build-frontend
+       #- build-backend
+       #- test-frontend:
+       #   requires: [build-frontend]
+      #  - test-backend:
+      #     requires: [build-backend]
+      #  - scan-backend:
+      #     requires: [build-backend]
+      #  - scan-frontend:
+      #     requires: [build-frontend]
        - deploy-infrastructure:
-           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-           filters:
-             branches:
-               only: [master]
+          #  requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          #  filters:
+          #    branches:
+          #      only: [master]
        - configure-infrastructure:
           requires: [deploy-infrastructure]
        - run-migrations:
