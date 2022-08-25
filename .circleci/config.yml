@@ -318,7 +318,7 @@ jobs:
             npm run build
             cd ..
             # Zip the directory
-            zip -r artifact.zip backend
+            zip -r backend artifact.zip 
             cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
