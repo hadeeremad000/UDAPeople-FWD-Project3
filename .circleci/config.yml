@@ -319,7 +319,7 @@ jobs:
             cd ..
             # Zip the directory
             zip -r artifact.zip backend
-            cd project/.circleci/ansible
+            cd .circleci/ansible
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
