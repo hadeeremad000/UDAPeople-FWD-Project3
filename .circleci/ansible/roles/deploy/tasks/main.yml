@@ -1,17 +1,17 @@
 ---
 - name: "Creates backend app directory"
   file:
-    path: ~/backend
+    path: ~/backend-app
     state: directory
 
 - name: "Copy compiled backend app"
   copy:
-    src: artifact.tar.gz
-    dest: "~/backend/artifact.tar.gz"
+    src: ~/project/artifact.tar.gz
+    dest: "~/backend-app/artifact.tar.gz"
 
 - name: "Unzip backend files to correct directory"
   shell: |
-    cd ~/backend
+    cd ~/backend-app
     tar -zxvf artifact.tar.gz
     rm -rf artifact.tar.gz
 - name: "Install dependencies for project"
