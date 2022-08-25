@@ -6,14 +6,14 @@
 
 - name: "Copy compiled backend app"
   copy:
-    src: artifact.zip
-    dest: "~/backend/artifact.zip"
+    src: artifact.tar.gz
+    dest: "~/backend/artifact.tar.gz"
 
 - name: "Unzip backend files to correct directory"
   shell: |
     cd ~/backend
-    unzip artifact.zip
-    rm -rf artifact.zip
+    tar -zxvf artifact.tar.gz
+    rm -rf artifact.tar.gz
 - name: "Install dependencies for project"
   shell: |
     cd ~/backend
