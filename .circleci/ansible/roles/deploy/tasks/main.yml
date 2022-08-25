@@ -21,7 +21,7 @@
 - name: "Executing node"
   shell: |
     export
-    cd ~/backend-app
+    cd ~/backend-app/src
     ls -a
     pm2 start main.js
   register: execute_node
