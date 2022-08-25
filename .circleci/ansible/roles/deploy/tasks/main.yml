@@ -16,12 +16,12 @@
     rm -rf artifact.tar.gz
 - name: "Install dependencies for project"
   shell: |
-    cd ~/backend
+    cd ~/backend-app
     npm install
 - name: "Executing node"
   shell: |
     export
-    cd ~/backend
+    cd ~/backend-app
     pm2 start main.js
   register: execute_node
 
