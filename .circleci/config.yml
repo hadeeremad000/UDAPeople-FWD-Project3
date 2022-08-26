@@ -340,6 +340,7 @@ jobs:
           command: |
             apk add --update ansible
             apk add tar gzip
+            apk add curl
       - run:
           name: install awscli
           command: |
