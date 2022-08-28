@@ -459,9 +459,9 @@ jobs:
               aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
               aws cloudformation delete-stack --stack-name "udapeople-backend-${OldWorkflowID}"
               aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
-            else
-            echo " clean up not successfull"
             fi
+      - destroy-environment
+      - revert_migrations              
 workflows:
   default:
     jobs:
