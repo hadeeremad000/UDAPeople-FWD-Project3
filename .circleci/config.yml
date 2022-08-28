@@ -160,6 +160,7 @@ jobs:
           command: |
             BACKEND_AWS_PUBLIC_IP=$(aws ec2 describe-instances \
               --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --filters "Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --output text )
             echo "http://$BACKEND_AWS_PUBLIC_IP:3030" >> ~/project/.circleci/outputs/backend_url.txt
             echo "$BACKEND_AWS_PUBLIC_IP" >> .circleci/ansible/inventory.txt
@@ -262,7 +263,8 @@ jobs:
           name: Get backend url
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances \
-              --query 'Reservations[*].Instances[*].PublicIpAddress' \
+              --query 'Reservations[*].Instances[*].PublicIpAddress' \ 
+              Name=tag:Name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} \
               --output text )
             export API_URL="http://${BACKEND_IP}:3030"
             echo "API_URL = ${API_URL}"
